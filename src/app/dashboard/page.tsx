@@ -23,7 +23,7 @@ export default function Home() {
                         className="inline-flex gap-2"
                         asChild
                     >
-                        <Link href="/dashboard/new">
+                        <Link href="/invoices/new">
                             <Plus className="h-4 w-4" />
                             Create Invoice
                         </Link>
