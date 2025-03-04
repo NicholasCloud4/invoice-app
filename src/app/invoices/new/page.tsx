@@ -6,19 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-export default async function Home() {
-    const results = await db.execute(sql`SELECT current_database()`);
-    console.log(results);
+import { createAction } from "@/app/actions";
 
+export default function Home() {
     return (
         <main className="flex flex-col justify-center h-full gap-5 max-w-5xl mx-auto my-12">
             <div className="flex justify-between">
                 <h1 className="text-4xl font-bold">Create a New Invoice</h1>
             </div>
 
-            {JSON.stringify(results)}
-
-            <form className="grid gap-4 max-w-xs">
+            <form action={createAction} className="grid gap-4 max-w-xs">
                 <div>
                     <Label
                         htmlFor="name"
@@ -57,7 +54,7 @@ export default async function Home() {
                 </div>
 
                 <div>
-                    <Button className="w-full font-semibold" type="submit">
+                    <Button className="w-full font-semibold">
                         Create Invoice
                     </Button>
                 </div>
