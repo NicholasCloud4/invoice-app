@@ -49,10 +49,10 @@ export default function Home() {
                             <span className="font-semibold"> 3/4/2025</span>
                         </TableCell>
                         <TableCell className="text-left p-4">
-                            <span className="font-semibold">SLEEK JEEZY</span>
+                            <span className="font-semibold">NAME NAME</span>
                         </TableCell>
                         <TableCell className="text-left p-4">
-                            <span className="">sleek.jeezy@me.com</span>
+                            <span className="">Test@me.com</span>
                         </TableCell>
                         <TableCell className="text-center p-4">
                             <span className="font-semibold">
