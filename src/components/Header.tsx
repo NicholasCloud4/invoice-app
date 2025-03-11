@@ -20,7 +20,6 @@ export default function Header() {
                     <div>
                         <SignedOut>
                             <SignInButton />
-                            <SignUpButton />
                         </SignedOut>
                         <SignedIn>
                             <UserButton />
