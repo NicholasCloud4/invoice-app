@@ -1,5 +1,12 @@
 import { notFound } from "next/navigation";
 
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import { db } from "@/db";
 import { Invoices } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
@@ -7,6 +14,9 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Container from "@/components/Container";
 import { auth } from "@clerk/nextjs/server";
+import { Button } from "@/components/ui/button";
+import { AVAILABLE_STATUSES } from "@/data/invoices";
+import { updateStatusAction } from "@/app/actions";
 
 export default async function InvoicePage({
     params,
@@ -15,18 +25,24 @@ export default async function InvoicePage({
 }) {
     const { userId } = await auth();
 
-    if (!userId) return;
+    if (!userId) {
+        return;
+    }
 
-    const invoiceId = parseInt(params.invoiceId);
+    const { invoiceId } = await params;
+    const parsedInvoiceId = parseInt(invoiceId);
+    // const invoiceId = parseInt(params.invoiceId);
 
-    if (isNaN(invoiceId)) {
+    if (isNaN(parsedInvoiceId)) {
         throw new Error("Invoice ID is not a number");
     }
 
     const [result] = await db
         .select()
         .from(Invoices)
-        .where(and(eq(Invoices.id, invoiceId), eq(Invoices.userId, userId)))
+        .where(
+            and(eq(Invoices.id, parsedInvoiceId), eq(Invoices.userId, userId))
+        )
         .limit(1);
 
     if (!result) return notFound();
@@ -34,11 +50,12 @@ export default async function InvoicePage({
     // console.log(result);
 
     return (
-        <main className="h-full">
+        <main className="w-full h-full max-w-5xl mx-auto my-12">
             <Container>
-                <div className="flex justify-between mb-8">
-                    <h1 className="text-4xl font-bold">
-                        Invoice #{invoiceId}
+                <div className="justify-between mb-8">
+                    <h1 className="text-4xl font-bold">Invoice #{invoiceId}</h1>
+                    <br />
+                    <div className="inline-flex items-center gap-4">
                         <Badge
                             className={cn(
                                 "rounded-full text-xs capitalize flex",
@@ -51,8 +68,33 @@ export default async function InvoicePage({
                         >
                             {result.status}
                         </Badge>
-                    </h1>
-                    <p></p>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline">Change Status</Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                {AVAILABLE_STATUSES.map((status) => {
+                                    return (
+                                        <DropdownMenuItem key={status.id}>
+                                            <form action={updateStatusAction}>
+                                                <input
+                                                    type="hidden"
+                                                    name="id"
+                                                    value={invoiceId}
+                                                />
+                                                <input
+                                                    type="hidden"
+                                                    name="status"
+                                                    value={status.id}
+                                                />
+                                                <button>{status.label}</button>
+                                            </form>
+                                        </DropdownMenuItem>
+                                    );
+                                })}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
                 <p className="text-2xl mb-3">
                     ${(result.amount / 100).toFixed(2)}
