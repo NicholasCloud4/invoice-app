@@ -5,6 +5,7 @@ import * as SignIn from "@clerk/elements/sign-in";
 import { NotepadTextDashed } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function SignInPage() {
     return (
@@ -125,8 +126,46 @@ export default function SignInPage() {
                             <Clerk.Input
                                 type="otp"
                                 required
-                                placeholder="Email code"
-                                className="w-full border-b border-neutral-200 bg-white pb-2 text-sm/6 text-neutral-950 outline-none placeholder:text-neutral-400 hover:border-neutral-300 focus:border-neutral-600 data-[invalid]:border-red-600 data-[invalid]:text-red-600"
+                                className="flex justify-center gap-1"
+                                render={({ value, status }) => (
+                                    <div
+                                        data-status={status}
+                                        className="relative h-9 w-8 rounded-md bg-white ring-1 ring-inset ring-zinc-300 data-[status=selected]:bg-sky-400/10 data-[status=selected]:shadow-[0_0_8px_2px_theme(colors.sky.400/30%)] data-[status=selected]:ring-sky-400"
+                                    >
+                                        <AnimatePresence>
+                                            {value && (
+                                                <motion.span
+                                                    initial={{
+                                                        opacity: 0,
+                                                        scale: 0.75,
+                                                    }}
+                                                    animate={{
+                                                        opacity: 1,
+                                                        scale: 1,
+                                                    }}
+                                                    exit={{
+                                                        opacity: 0,
+                                                        scale: 0.75,
+                                                    }}
+                                                    className="absolute inset-0 flex items-center justify-center text-zinc-950"
+                                                >
+                                                    {value}
+                                                </motion.span>
+                                            )}
+                                            {value}
+                                        </AnimatePresence>
+                                        {status === "cursor" && (
+                                            <motion.div
+                                                layoutId="otp-input-focus"
+                                                transition={{
+                                                    ease: [0.2, 0.4, 0, 1],
+                                                    duration: 0.2,
+                                                }}
+                                                className="absolute inset-0 z-10 rounded-[inherit] border border-sky-400 bg-sky-400/10 shadow-[0_0_8px_2px_theme(colors.sky.400/30%)]"
+                                            />
+                                        )}
+                                    </div>
+                                )}
                             />
                             <Clerk.FieldError className="mt-2 block text-xs text-red-600" />
                         </Clerk.Field>
