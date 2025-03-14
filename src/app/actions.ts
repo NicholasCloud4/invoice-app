@@ -60,6 +60,8 @@ export async function updateStatusAction(formData: FormData) {
         .set({ status })
         .where(and(eq(Invoices.id, parseInt(id)), eq(Invoices.userId, userId)));
 
+    console.log(result);
+
     revalidatePath(`/invoices/${id}`, "page");
 }
 
@@ -73,6 +75,8 @@ export async function deleteInvoiceAction(formData: FormData) {
     const result = await db
         .delete(Invoices)
         .where(and(eq(Invoices.id, parseInt(id)), eq(Invoices.userId, userId)));
+
+    console.log(result);
 
     redirect("/dashboard");
 }
