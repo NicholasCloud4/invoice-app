@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 import Container from "@/components/Container";
 import { Button } from "@/components/ui/button";
 import { AVAILABLE_STATUSES } from "@/data/invoices";
-import { updateStatusAction } from "@/app/actions";
-import { CircleChevronDown } from "lucide-react";
+import { updateStatusAction, deleteInvoiceAction } from "@/app/actions";
+import { CircleChevronDown, Ellipsis, Trash } from "lucide-react";
 import { useOptimistic } from "react";
 
 interface InvoiceProps {
@@ -85,6 +85,33 @@ export default function Invoice({ invoice }: InvoiceProps) {
                                         </DropdownMenuItem>
                                     );
                                 })}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline">
+                                    <span className="sr-only">
+                                        More Options
+                                    </span>
+                                    <Ellipsis className="w-4 h-auto" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>
+                                    <form action={deleteInvoiceAction}>
+                                        <input
+                                            type="hidden"
+                                            name="id"
+                                            value={invoice.id}
+                                        />
+                                        <input type="hidden" name="status" />
+                                        <button className="flex items-center gap-2">
+                                            <Trash />
+                                            Delete Invoice
+                                        </button>
+                                    </form>
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
