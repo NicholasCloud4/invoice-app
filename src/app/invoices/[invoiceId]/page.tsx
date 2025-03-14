@@ -5,20 +5,19 @@ import { and, eq } from "drizzle-orm";
 import { auth } from "@clerk/nextjs/server";
 import Invoice from "./Invoice";
 
-export default async function InvoicePage({
-    params,
-}: {
-    params: { invoiceId: string };
-}) {
+// Typing the params as a Promise
+type tParams = Promise<{ invoiceId: string }>;
+
+export default async function InvoicePage({ params }: { params: tParams }) {
     const { userId } = await auth();
 
     if (!userId) {
         return;
     }
 
+    // Await params to resolve it
     const { invoiceId } = await params;
     const parsedInvoiceId = parseInt(invoiceId);
-    // const invoiceId = parseInt(params.invoiceId);
 
     if (isNaN(parsedInvoiceId)) {
         throw new Error("Invoice ID is not a number");
@@ -34,8 +33,6 @@ export default async function InvoicePage({
         .limit(1);
 
     if (!result) return notFound();
-
-    // console.log(result);
 
     const invoice = {
         ...result.invoices,
