@@ -15,6 +15,20 @@
       "when": 1741872560985,
       "tag": "0001_fancy_whistler",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1741972336060,
+      "tag": "0002_nostalgic_ultron",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1741972412695,
+      "tag": "0003_worried_banshee",
+      "breakpoints": true
     }
   ]
 }
