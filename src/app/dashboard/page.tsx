@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { db } from "@/db";
-import { Invoices } from "@/db/schema";
+import { Customers, Invoices } from "@/db/schema";
 import { cn } from "@/lib/utils";
 import Container from "@/components/Container";
 import { auth } from "@clerk/nextjs/server";
@@ -26,8 +26,16 @@ export default async function Home() {
     const results = await db
         .select()
         .from(Invoices)
+        .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
         .where(eq(Invoices.userId, userId));
-    console.log(results);
+
+    const invoices = results?.map(({ invoices, customers }) => {
+        return {
+            ...invoices,
+            customer: customers,
+        };
+    });
+
     return (
         <main className="h-full">
             <Container>
@@ -65,7 +73,7 @@ export default async function Home() {
                     </TableHeader>
 
                     <TableBody>
-                        {results.map((result) => {
+                        {invoices.map((result) => {
                             return (
                                 <TableRow key={result.id}>
                                     <TableCell className="font-medium text-left p-0">
@@ -83,7 +91,7 @@ export default async function Home() {
                                             href={`/invoices/${result.id}`}
                                             className="font-semibold block p-4"
                                         >
-                                            NAME NAME
+                                            {result.customer.name}
                                         </Link>
                                     </TableCell>
                                     <TableCell className="text-left p-0">
@@ -91,7 +99,7 @@ export default async function Home() {
                                             href={`/invoices/${result.id}`}
                                             className="block p-4"
                                         >
-                                            Test@me.com
+                                            {result.customer.email}
                                         </Link>
                                     </TableCell>
                                     <TableCell className="text-center p-0">
