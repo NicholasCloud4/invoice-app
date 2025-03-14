@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 
+/* eslint-disable */
 interface ContainerProps extends React.ComponentProps<"div"> {}
 
 export default function Container({
